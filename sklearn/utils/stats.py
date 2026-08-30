@@ -182,9 +182,11 @@ def _weighted_percentile(
             percentile_plus_one_in_sorted = sorted_idx[
                 percentile_plus_one_indices, col_indices
             ]
-            # Handle case when next index ('plus one') has sample weight of 0
+            # Handle case when next index ('plus one') has sample weight of 0.
+            # Use `sorted_weights`, where `NaN` weights are already set to 0, so
+            # `NaN`s are skipped like any other zero-weight value.
             zero_weight_cols = col_indices[
-                sample_weight[percentile_plus_one_in_sorted, col_indices] == 0
+                sorted_weights[percentile_plus_one_indices, col_indices] == 0
             ]
             for col_idx in zero_weight_cols:
                 cdf_val = weight_cdf[col_idx, percentile_indices[col_idx]]
